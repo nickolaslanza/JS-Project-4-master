@@ -42,6 +42,9 @@ h1 {
     top: 50%;
     -webkit-transform: translatey(-50%);
     transform: translatey(-50%); }
+  .screen header input {
+    margin: 40px 20px;
+  }
   .screen h1 {
     color: #fff; }
   .screen-start {
