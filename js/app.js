@@ -4,112 +4,144 @@
 
 (function IIFE(){
 
-  const screenOnLoad = document.createElement("div");
-  const screenHeader = document.createElement("header");
-  const screenH1 = document.createElement("h1");
-  const screenbutton = document.createElement("button");
-  const screenPlayer1Label = document.createElement("label");
-  const screenPlayer2Label = document.createElement("label");
-  const screenPlayer1Input = document.createElement("input");
-  const screenPlayer2Input = document.createElement("input");
-  const br = document.createElement("br");
-
   const player1 = document.getElementById("player1");
   const player2 = document.getElementById("player2");
+  const boxes = document.querySelector(".boxes").children;
+  const screenPlayer1Input = document.createElement("input");
+  const screenPlayer2Input = document.createElement("input");
+  const player1name = document.querySelector(".name1");
+  const player2name = document.querySelector(".name2");
 
-  // When the window loads, a screen displays over the game asking for the users inputs.
-  window.onload = function() {
-    // Creating the div for the screen and appending it
-    screenOnLoad.setAttribute("class", "screen screen-start");
-    screenH1.textContent = "Tic Tac Toe";
+//variables to create a screen;
+  let screenOnLoad = document.createElement("div");
+  let screenHeader = document.createElement("header");
+  let screenH1 = document.createElement("h1");
+  let screenbutton = document.createElement("button");
+  let screenPlayer1Label = document.createElement("label");
+  let screenPlayer2Label = document.createElement("label");
+  let br = document.createElement("br");
 
-    screenPlayer1Label.textContent = "Player 1: ";
-    screenPlayer2Label.textContent = "Player 2: ";
+function gameStart() {
+  screenOnLoad.setAttribute("class", "screen screen-start");
+  screenH1.textContent = "Tic Tac Toe";
+  screenPlayer1Label.textContent = "Player 1: ";
+  screenPlayer2Label.textContent = "Player 2: ";
+  screenbutton.setAttribute("class", "button");
+  screenbutton.textContent = "Start Game";
+  screenOnLoad.appendChild(screenHeader);
+  screenHeader.appendChild(screenH1);
+  screenHeader.appendChild(screenPlayer1Label);
+  screenHeader.appendChild(screenPlayer1Input);
+  screenHeader.appendChild(screenPlayer2Label);
+  screenHeader.appendChild(screenPlayer2Input);
+  screenHeader.appendChild(br);
+  screenHeader.appendChild(screenbutton);
+  document.body.appendChild(screenOnLoad);
 
-    screenbutton.setAttribute("class", "button");
-    screenbutton.textContent = "Start Game";
-
-
-    screenOnLoad.appendChild(screenHeader);
-    screenHeader.appendChild(screenH1);
-    screenHeader.appendChild(screenPlayer1Label);
-    screenHeader.appendChild(screenPlayer1Input);
-    screenHeader.appendChild(screenPlayer2Label);
-    screenHeader.appendChild(screenPlayer2Input);
-    screenHeader.appendChild(br);
-    screenHeader.appendChild(screenbutton);
-    document.body.appendChild(screenOnLoad);
-
-  }
-
-// When the user clicks on start game, the values are then extracted from the inputs and placed on the screen underneath each x and o
+  // When the user clicks on start game, the values are then extracted from the inputs and placed on the screen underneath each x and o
   screenbutton.addEventListener("click", function() {
-    // //If I uncomment this section, I get the error: Failed to execute 'appendChild' on 'Node': parameter 1 is not of type 'Node'.
-    // //I'm not sure why. Can you help me?
 
-    // var player1 = screenPlayer1Input.value;
-    // var player2 = screenPlayer2Input.value;
-    //
-    // var player1div = document.getElementById("player1");
-    // var player2div = document.getElementById("player2");
-    //
-    // player1div.appendChild(player1);
-    // player2div.appendChild(player2);
+    var player1value = screenPlayer1Input.value;
+    var player2value = screenPlayer2Input.value;
+    player1name.textContent = player1value;
+    player2name.textContent = player2value;
 
     screenOnLoad.remove();
 
     player1.classList.add("active");
   });
 
+}
 
-const boxes = document.querySelector(".boxes").children;
-
-function addingColor(box) {
-  if (box.classList === "box") {
-    return;
-  } else {
-    box.addEventListener("mouseover", function() {
-      box.classList.add("box-filled-1-5");
-    });
+function win(theBoard, winString) {
+  let test = [];
+  test[0] = ((theBoard[0] + theBoard[1] + theBoard[2]) === winString);
+  for (let i = 0; i < test.length; i++) {
+    if (test[i] === true) {
+      return true;
+    }
   }
 }
 
-function removingColor(box) {
-    box.addEventListener("mouseout", function() {
-      box.classList.remove("box-filled-1-5");
-    });
+function winScreen() {
+  screenOnLoad.setAttribute("class", "screen screen-win-one");
+  screenH1.textContent = "Winner";
+  screenbutton.textContent = "New Game";
+  screenOnLoad.appendChild(screenHeader);
+  screenHeader.appendChild(screenH1);
+  screenHeader.appendChild(screenbutton);
+  document.body.appendChild(screenOnLoad);
 }
 
-function changingBackground(box) {
+let currentPlayer = "O";
+let theBoard = [];
+let playerShape = "";
+let moveCount = 0;
+const xWins = "XXX";
+const oWins = "000";
+
+function initializeBoxes(box) {
+
+  // Mouseover not working when box clicked
+  box.addEventListener("mouseover", function() {
+    if (!box.classList.contains("box-filled-1")) {
+      box.classList.add("box-filled-1-5-1");
+    }
+  });
+
+  // mouseout not working when box clicked
+  box.addEventListener("mouseout", function() {
+    if (!box.classList.contains("box-filled-1")) {
+      box.classList.remove("box-filled-1-5-1");
+    }
+  });
+
   box.addEventListener("click", function() {
-    box.classList.remove("box-filled-1-5");
-    box.classList.add("box-filled-1");
+
+    let selectedBoxNum = Array.prototype.indexOf.call(boxes, this);
+    theBoard[selectedBoxNum] = currentPlayer;
+    console.log(theBoard);
+
+    if (currentPlayer === "O") {
+      box.classList.add("box-filled-1");
+      box.classList.add("clicked");
+      currentPlayer = "X";
+      player1.classList.remove("active");
+      player2.classList.add("active");
+      moveCount += 1;
+    } else if (currentPlayer === "X") {
+      box.classList.add("box-filled-2");
+      box.classList.add("clicked");
+      currentPlayer = "O";
+      player2.classList.remove("active");
+      player1.classList.add("active");
+      moveCount += 1;
+    }
+
+    let condition1 = (win(theBoard, xWins));
+    let condition2 = (win(theBoard, oWins));
+    let condition3 = (moveCount === 9);
+
+    if (condition1) {
+      winScreen();
+    } else if (condition2) {
+      console.log("win!");
+    } else {
+      if ((!condition1) && (!condition2) && condition3) {
+        console.log("Draw");
+      }
+    }
+
+
   });
 }
 
-// Giving all the boxes on the game board the ability to add color and remove the color
-for (var i = 0; i < boxes.length; i++) {
-  addingColor(boxes[i]);
-  removingColor(boxes[i]);
-  changingBackground(boxes[i]);
+
+gameStart();
+
+for (let i = 0; i < boxes.length; i++) {
+  initializeBoxes(boxes[i]);
 }
-
-
-
-
-
-
-//Clicking on the box to add the svg
-  // box1.addEventListener("click", function() {
-  //   var svg =
-  //   `<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-  //     <g transform="translate(-200.000000, -60.000000)" fill="#FFFFFF">
-  //       <g transform="translate(200.000000, 60.000000)">
-  //         <path d="M21 36.6L21 36.6C29.6 36.6 36.6 29.6 36.6 21 36.6 12.4 29.6 5.4 21 5.4 12.4 5.4 5.4 12.4 5.4 21 5.4 29.6 12.4 36.6 21 36.6L21 36.6ZM21 42L21 42C9.4 42 0 32.6 0 21 0 9.4 9.4 0 21 0 32.6 0 42 9.4 42 21 42 32.6 32.6 42 21 42L21 42Z"/></g></g></g>
-  //   </svg>`;
-  //   var encoded = window.btoa(svg);
-  //   box1.style.background = "url(data:image/svg+xml;base64," + encoded + ")";
-  // });
 
 
 }());
