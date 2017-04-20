@@ -1,7 +1,5 @@
 // When the page loads, the startup screen should appear. Use the tictactoe-01-start.png mockup, and the start.txt HTML snippet to guide you.
 
-
-
 (function IIFE(){
 
   const player1 = document.getElementById("player1");
@@ -11,6 +9,7 @@
   const screenPlayer2Input = document.createElement("input");
   const player1name = document.querySelector(".name1");
   const player2name = document.querySelector(".name2");
+  const body = document.querySelector("body");
 
 //variables to create a screen;
   let screenOnLoad = document.createElement("div");
@@ -41,37 +40,18 @@ function gameStart() {
   // When the user clicks on start game, the values are then extracted from the inputs and placed on the screen underneath each x and o
   screenbutton.addEventListener("click", function() {
 
-    var player1value = screenPlayer1Input.value;
-    var player2value = screenPlayer2Input.value;
-    player1name.textContent = player1value;
-    player2name.textContent = player2value;
+    // var player1value = screenPlayer1Input.value;
+    // var player2value = screenPlayer2Input.value;
+    // player1name.textContent = player1value;
+    // player2name.textContent = player2value;
 
     screenOnLoad.remove();
-
     player1.classList.add("active");
+    body.removeChild(screenOnLoad);
   });
 
 }
 
-function win(theBoard, winString) {
-  let test = [];
-  test[0] = ((theBoard[0] + theBoard[1] + theBoard[2]) === winString);
-  for (let i = 0; i < test.length; i++) {
-    if (test[i] === true) {
-      return true;
-    }
-  }
-}
-
-function winScreen() {
-  screenOnLoad.setAttribute("class", "screen screen-win-one");
-  screenH1.textContent = "Winner";
-  screenbutton.textContent = "New Game";
-  screenOnLoad.appendChild(screenHeader);
-  screenHeader.appendChild(screenH1);
-  screenHeader.appendChild(screenbutton);
-  document.body.appendChild(screenOnLoad);
-}
 
 let currentPlayer = "O";
 let theBoard = [];
@@ -79,22 +59,89 @@ let playerShape = "";
 let moveCount = 0;
 const xWins = "XXX";
 const oWins = "000";
+const winner = "Winner!";
+const lose = "Loser!";
+const draw = "Draw";
+const winnerScreen = "screen screen-win-one";
+const loserScreen = "screen screen-win-two";
+const drawScreen = "screen screen-win-tie";
+
+let screenOnGame = document.createElement("div");
+let screenGameHeader = document.createElement("header");
+let screenGameh1 = document.createElement("h1");
+let screenGameButton = document.createElement("button");
+
+
+// Core logic of how to win on the gameboard;
+function win(theBoard, winString) {
+  let test = [];
+  test[0] = ((theBoard[0] + theBoard[1] + theBoard[2]) === winString);
+  test[1] = ((theBoard[3] + theBoard[4] + theBoard[5]) === winString);
+  test[2] = ((theBoard[6] + theBoard[7] + theBoard[8]) === winString);
+  test[3] = ((theBoard[0] + theBoard[3] + theBoard[6]) === winString);
+  test[4] = ((theBoard[1] + theBoard[4] + theBoard[7]) === winString);
+  test[5] = ((theBoard[2] + theBoard[5] + theBoard[8]) === winString);
+  test[6] = ((theBoard[0] + theBoard[4] + theBoard[8]) === winString);
+  test[7] = ((theBoard[2] + theBoard[4] + theBoard[6]) === winString);
+
+  for (let i = 0; i < test.length; i++) {
+    if ( test[i] === true) {
+      return true;
+    }
+  }
+}
+
+
+// Displays the screen based on who wins the game
+function displayScreen(outcome, outcomeScreen) {
+
+  screenOnGame.setAttribute("class", outcomeScreen);
+  screenGameh1.textContent = outcome;
+  screenGameButton.textContent = "New Game";
+  screenOnGame.appendChild(screenGameHeader);
+  screenGameHeader.appendChild(screenGameh1);
+  screenGameHeader.appendChild(screenGameButton);
+  // screenHeader.removeChild(screenPlayer1Input);
+  // screenHeader.removeChild(screenPlayer2Input);
+  screenPlayer1Label.textContent = "";
+  screenPlayer2Label.textContent = "";
+
+  document.body.appendChild(screenOnGame);
+
+// Removes the classes on the boxes
+  screenGameButton.addEventListener("click", function() {
+    for (let i = 0; i < boxes.length; i++) {
+      boxes[i].classList.remove("box-filled-1-9");
+      boxes[i].classList.remove("box-filled-2-9");
+      boxes[i].classList.add("box");
+    }
+
+    player1.classList.add("active");
+    screenOnGame.remove();
+
+  // Resets the movcount and the board
+    moveCount = 0;
+    theBoard = [];
+  });
+
+}
 
 function initializeBoxes(box) {
 
-  // Mouseover not working when box clicked
+  // Mouseover turning O's grey
   box.addEventListener("mouseover", function() {
-    if (!box.classList.contains("box-filled-1")) {
+    if (!box.classList.contains("box-filled-1-9") || !box.classList.contains("box-filled-2-9")) {
       box.classList.add("box-filled-1-5-1");
     }
   });
 
-  // mouseout not working when box clicked
+  // mouseout removing gray class X's
   box.addEventListener("mouseout", function() {
-    if (!box.classList.contains("box-filled-1")) {
+    if (!box.classList.contains("box-filled-1-9") || !box.classList.contains("box-filled-2-9")) {
       box.classList.remove("box-filled-1-5-1");
     }
   });
+
 
   box.addEventListener("click", function() {
 
@@ -103,16 +150,16 @@ function initializeBoxes(box) {
     console.log(theBoard);
 
     if (currentPlayer === "O") {
-      box.classList.add("box-filled-1");
-      box.classList.add("clicked");
+      box.classList.add("box-filled-1-9");
       currentPlayer = "X";
       player1.classList.remove("active");
+      box.classList.remove("box-filled-1-5-1");
       player2.classList.add("active");
       moveCount += 1;
     } else if (currentPlayer === "X") {
-      box.classList.add("box-filled-2");
-      box.classList.add("clicked");
+      box.classList.add("box-filled-2-9");
       currentPlayer = "O";
+      box.classList.remove("box-filled-1-5-1");
       player2.classList.remove("active");
       player1.classList.add("active");
       moveCount += 1;
@@ -123,12 +170,15 @@ function initializeBoxes(box) {
     let condition3 = (moveCount === 9);
 
     if (condition1) {
-      winScreen();
+      console.log(lose);
+      displayScreen(lose, loserScreen);
     } else if (condition2) {
-      console.log("win!");
+      console.log(winner);
+      displayScreen(winner, winnerScreen);
     } else {
       if ((!condition1) && (!condition2) && condition3) {
-        console.log("Draw");
+        console.log(draw);
+        displayScreen(draw, drawScreen);
       }
     }
 
