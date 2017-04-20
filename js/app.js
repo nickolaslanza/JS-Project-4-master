@@ -40,11 +40,6 @@ function gameStart() {
   // When the user clicks on start game, the values are then extracted from the inputs and placed on the screen underneath each x and o
   screenbutton.addEventListener("click", function() {
 
-    // var player1value = screenPlayer1Input.value;
-    // var player2value = screenPlayer2Input.value;
-    // player1name.textContent = player1value;
-    // player2name.textContent = player2value;
-
     screenOnLoad.remove();
     player1.classList.add("active");
     body.removeChild(screenOnLoad);
@@ -70,7 +65,7 @@ let screenOnGame = document.createElement("div");
 let screenGameHeader = document.createElement("header");
 let screenGameh1 = document.createElement("h1");
 let screenGameButton = document.createElement("button");
-
+let screenP = document.createElement("p");
 
 // Core logic of how to win on the gameboard;
 function win(theBoard, winString) {
@@ -96,26 +91,26 @@ function win(theBoard, winString) {
 function displayScreen(outcome, outcomeScreen) {
 
   screenOnGame.setAttribute("class", outcomeScreen);
-  screenGameh1.textContent = outcome;
+  screenGameButton.setAttribute("class", "button");
+  screenGameh1.textContent = "Tic Tac Toe";
   screenGameButton.textContent = "New Game";
+  screenP.textContent = outcome;
   screenOnGame.appendChild(screenGameHeader);
   screenGameHeader.appendChild(screenGameh1);
+  screenGameHeader.appendChild(screenP);
   screenGameHeader.appendChild(screenGameButton);
-  // screenHeader.removeChild(screenPlayer1Input);
-  // screenHeader.removeChild(screenPlayer2Input);
-  screenPlayer1Label.textContent = "";
-  screenPlayer2Label.textContent = "";
 
   document.body.appendChild(screenOnGame);
 
 // Removes the classes on the boxes
   screenGameButton.addEventListener("click", function() {
     for (let i = 0; i < boxes.length; i++) {
-      boxes[i].classList.remove("box-filled-1-9");
-      boxes[i].classList.remove("box-filled-2-9");
+      boxes[i].classList.remove("box-filled-1");
+      boxes[i].classList.remove("box-filled-2");
       boxes[i].classList.add("box");
     }
 
+    player2.classList.remove("active");
     player1.classList.add("active");
     screenOnGame.remove();
 
@@ -128,19 +123,19 @@ function displayScreen(outcome, outcomeScreen) {
 
 function initializeBoxes(box) {
 
-  // Mouseover turning O's grey
-  box.addEventListener("mouseover", function() {
-    if (!box.classList.contains("box-filled-1-9") || !box.classList.contains("box-filled-2-9")) {
-      box.classList.add("box-filled-1-5-1");
-    }
-  });
-
-  // mouseout removing gray class X's
-  box.addEventListener("mouseout", function() {
-    if (!box.classList.contains("box-filled-1-9") || !box.classList.contains("box-filled-2-9")) {
-      box.classList.remove("box-filled-1-5-1");
-    }
-  });
+  // // Mouseover turning O's grey
+  // box.addEventListener("mouseover", function() {
+  //   if (!box.classList.contains("box-filled-1-9") || !box.classList.contains("box-filled-2-9")) {
+  //     box.classList.add("box-filled-1-5-1");
+  //   }
+  // });
+  //
+  // // mouseout removing gray class X's
+  // box.addEventListener("mouseout", function() {
+  //   if (!box.classList.contains("box-filled-1-9") || !box.classList.contains("box-filled-2-9")) {
+  //     box.classList.remove("box-filled-1-5-1");
+  //   }
+  // });
 
 
   box.addEventListener("click", function() {
@@ -150,14 +145,14 @@ function initializeBoxes(box) {
     console.log(theBoard);
 
     if (currentPlayer === "O") {
-      box.classList.add("box-filled-1-9");
+      box.classList.add("box-filled-1");
       currentPlayer = "X";
       player1.classList.remove("active");
       box.classList.remove("box-filled-1-5-1");
       player2.classList.add("active");
       moveCount += 1;
     } else if (currentPlayer === "X") {
-      box.classList.add("box-filled-2-9");
+      box.classList.add("box-filled-2");
       currentPlayer = "O";
       box.classList.remove("box-filled-1-5-1");
       player2.classList.remove("active");
@@ -181,8 +176,6 @@ function initializeBoxes(box) {
         displayScreen(draw, drawScreen);
       }
     }
-
-
   });
 }
 
@@ -192,6 +185,5 @@ gameStart();
 for (let i = 0; i < boxes.length; i++) {
   initializeBoxes(boxes[i]);
 }
-
 
 }());
