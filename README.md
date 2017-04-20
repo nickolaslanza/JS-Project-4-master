@@ -15,4 +15,4 @@ HTML5, CSS3, Javascript, Github
 
 # Future Directions for this Project
 
-Currently no future directions for this project. This project would be used as a supplemental UI feature for a website that requires registration registration and form validation.
+Currently no future directions for this project. 
