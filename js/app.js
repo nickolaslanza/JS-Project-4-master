@@ -45,20 +45,46 @@ function gameStart() {
 
 }
 
-let currentPlayer = "O";
-let theXBoard = [];
-let theOBoard = [];
-let moveCount = 0;
-const winningBoard = [
-  "012", "021", "120", "102", "201", "210",
-  "345", "354", "435", "453", "535", "534",
-  "678", "687", "768", "786", "867", "876",
-  "036", "063", "306", "360", "603", "630",
-  "147", "174", "417", "471", "714", "741",
-  "258", "285", "528", "582", "825", "852",
-  "048", "084", "408", "480", "804", "840",
-  "246", "264", "426", "462", "624", "642"
-];
+// const winningBoard = [
+//   "012", "021", "120", "102", "201", "210",
+//   "345", "354", "435", "453", "535", "534",
+//   "678", "687", "768", "786", "867", "876",
+//   "036", "063", "306", "360", "603", "630",
+//   "147", "174", "417", "471", "714", "741",
+//   "258", "285", "528", "582", "825", "852",
+//   "048", "084", "408", "480", "804", "840",
+//   "246", "264", "426", "462", "624", "642"
+// ];
+
+// const winningBoard = [
+//   ['1a','1b','1c'],
+//   ['2a','2b','2c'],
+//   ['3a','3b','3c'],
+//   ['1a','2a','3a'],
+//   ['1b','2b','3b'],
+//   ['1c','2c','3c'],
+//   ['1a','2b','3c'],
+//   ['3a','2b','1c']
+// ];
+// const wincondition1 = ['1a','1b','1c'];
+// const wincondition2 = ['2a','2b','2c'];
+// const wincondition3 = ['3a','3b','3c'];
+// const wincondition4 = ['1a','2a','3a'];
+// const wincondition5 = ['1b','2b','3b'];
+// const wincondition6 = ['1c','2c','3c'];
+// const wincondition7 = ['1a','2b','3c'];
+// const wincondition8 = ['3a','2b','1c'];
+
+let box1 = document.getElementById("1a");
+let box2 = document.getElementById("1b");
+let box3 = document.getElementById("1c");
+let box4 = document.getElementById("2a");
+let box5 = document.getElementById("2b");
+let box6 = document.getElementById("2c");
+let box7 = document.getElementById("3a");
+let box8 = document.getElementById("3b");
+let box9 = document.getElementById("3c");
+
 const winner = "Winner!";
 const lose = "Loser!";
 const draw = "Draw";
@@ -72,39 +98,21 @@ let screenGameh1 = document.createElement("h1");
 let screenGameButton = document.createElement("button");
 let screenP = document.createElement("p");
 
+let currentPlayer = "O";
+let moveCount = 0;
+
 // Core logic of how to win on the gameboard;
-// theBoard is an array of values ["1" ]
-function win(theBoard, winString) {
-  let test1 = theBoard.join("");
+function win() {
 
-  // Need to hash out this logic more
-  if (theBoard.length > 3) {
-
-    let theBoard1 = theBoard;
-    theBoard1.shift();
-    console.log("test2", theBoard1);
-    for (let i = 0; i < winningBoard.length; i++) {
-      if ( winningBoard[i] === theBoard1) {
-        return true;
-      }
-    }
-
-    let theBoard2 = theBoard;
-    theBoard2.pop();
-    console.log("test3", theBoard2);
-    for (let i = 0; i < winningBoard.length; i++) {
-      if ( winningBoard[i] === theBoard2) {
+  if (box1.textContent !== "") {
+    if (box1.textContent === box2.textContent) {
+      if (box1.textContent === box3.textContent) {
         return true;
       }
     }
   }
 
-
-  for (let i = 0; i < winningBoard.length; i++) {
-    if ( winningBoard[i] === test1) {
-      return true;
-    }
-  }
+  return false;
 }
 
 
@@ -128,6 +136,7 @@ function displayScreen(outcome, outcomeScreen) {
       boxes[i].classList.remove("box-filled-1");
       boxes[i].classList.remove("box-filled-2");
       boxes[i].classList.add("box");
+      boxes[i].textContent = "";
     }
 
     player2.classList.remove("active");
@@ -135,13 +144,61 @@ function displayScreen(outcome, outcomeScreen) {
     screenOnGame.remove();
 
     moveCount = 0;
-    theXBoard = [];
-    theOBoard = [];
   });
 
 }
 
 function initializeBoxes(box) {
+
+  box.addEventListener("click", function(event) {
+    if (currentPlayer === "O") {
+      box.classList.add("box-filled-1");
+      box.textContent = "o";
+      player1.classList.remove("active");
+      box.classList.remove("box-filled-1-5-1");
+      player2.classList.add("active");
+      moveCount += 1;
+    } else if (currentPlayer === "X") {
+      box.classList.add("box-filled-2");
+      box.textContent = "x";
+      box.classList.remove("box-filled-1-5-1");
+      player2.classList.remove("active");
+      player1.classList.add("active");
+      moveCount += 1;
+    }
+
+    let condition1 = (win());
+    let condition3 = (moveCount === 9);
+
+    if (condition1) {
+      displayScreen(lose, loserScreen);
+    } else {
+      if ((!condition1) && condition3) {
+        displayScreen(draw, drawScreen);
+      }
+    }
+
+    // Changing Players after we check for win conditions
+    if (currentPlayer === "O") {
+      currentPlayer = "X";
+    } else if (currentPlayer === "X") {
+      currentPlayer = "O";
+    }
+  });
+}
+
+
+gameStart();
+
+for (let i = 0; i < boxes.length; i++) {
+  initializeBoxes(boxes[i]);
+}
+
+}());
+
+
+
+
 
   // // Mouseover turning O's grey
   // box.addEventListener("mouseover", function() {
@@ -156,54 +213,3 @@ function initializeBoxes(box) {
   //     box.classList.remove("box-filled-1-5-1");
   //   }
   // });
-
-
-  box.addEventListener("click", function(event) {
-
-// Possible logic to solve the problems of not being able to click on a current box that's selected
-    // if (currentPlayer === "O" && (!box.classList.contains("box-filled-1") || !box.classList.contains("box-filled-2")) {
-
-    if (currentPlayer === "O") {
-      box.classList.add("box-filled-1");
-      currentPlayer = "X";
-      player1.classList.remove("active");
-      box.classList.remove("box-filled-1-5-1");
-      player2.classList.add("active");
-      moveCount += 1;
-      theOBoard.push(event.target.id);
-    } else if (currentPlayer === "X") {
-      box.classList.add("box-filled-2");
-      currentPlayer = "O";
-      box.classList.remove("box-filled-1-5-1");
-      player2.classList.remove("active");
-      player1.classList.add("active");
-      moveCount += 1;
-      theXBoard.push(event.target.id);
-    }
-
-    console.log("theOBoard" ,theOBoard);
-    console.log("theXBoard", theXBoard);
-    let condition1 = (win(theXBoard, winningBoard));
-    let condition2 = (win(theOBoard, winningBoard));
-    let condition3 = (moveCount === 9);
-
-    if (condition1) {
-      displayScreen(lose, loserScreen);
-    } else if (condition2) {
-      displayScreen(winner, winnerScreen);
-    } else {
-      if ((!condition1) && (!condition2) && condition3) {
-        displayScreen(draw, drawScreen);
-      }
-    }
-  });
-}
-
-
-gameStart();
-
-for (let i = 0; i < boxes.length; i++) {
-  initializeBoxes(boxes[i]);
-}
-
-}());
