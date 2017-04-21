@@ -37,23 +37,28 @@ function gameStart() {
   screenHeader.appendChild(screenbutton);
   document.body.appendChild(screenOnLoad);
 
-  // When the user clicks on start game, the values are then extracted from the inputs and placed on the screen underneath each x and o
-  screenbutton.addEventListener("click", function() {
-
-    screenOnLoad.remove();
+  screenbutton.addEventListener("click", function(a,b) {
+    this.remove();
     player1.classList.add("active");
     body.removeChild(screenOnLoad);
   });
 
 }
 
-
 let currentPlayer = "O";
-let theBoard = [];
-let playerShape = "";
+let theXBoard = [];
+let theOBoard = [];
 let moveCount = 0;
-const xWins = "XXX";
-const oWins = "000";
+const winningBoard = [
+  "012", "021", "120", "102", "201", "210",
+  "345", "354", "435", "453", "535", "534",
+  "678", "687", "768", "786", "867", "876",
+  "036", "063", "306", "360", "603", "630",
+  "147", "174", "417", "471", "714", "741",
+  "258", "285", "528", "582", "825", "852",
+  "048", "084", "408", "480", "804", "840",
+  "246", "264", "426", "462", "624", "642"
+];
 const winner = "Winner!";
 const lose = "Loser!";
 const draw = "Draw";
@@ -68,19 +73,35 @@ let screenGameButton = document.createElement("button");
 let screenP = document.createElement("p");
 
 // Core logic of how to win on the gameboard;
+// theBoard is an array of values ["1" ]
 function win(theBoard, winString) {
-  let test = [];
-  test[0] = ((theBoard[0] + theBoard[1] + theBoard[2]) === winString);
-  test[1] = ((theBoard[3] + theBoard[4] + theBoard[5]) === winString);
-  test[2] = ((theBoard[6] + theBoard[7] + theBoard[8]) === winString);
-  test[3] = ((theBoard[0] + theBoard[3] + theBoard[6]) === winString);
-  test[4] = ((theBoard[1] + theBoard[4] + theBoard[7]) === winString);
-  test[5] = ((theBoard[2] + theBoard[5] + theBoard[8]) === winString);
-  test[6] = ((theBoard[0] + theBoard[4] + theBoard[8]) === winString);
-  test[7] = ((theBoard[2] + theBoard[4] + theBoard[6]) === winString);
+  let test1 = theBoard.join("");
 
-  for (let i = 0; i < test.length; i++) {
-    if ( test[i] === true) {
+  // Need to hash out this logic more
+  if (theBoard.length > 3) {
+
+    let theBoard1 = theBoard;
+    theBoard1.shift();
+    console.log("test2", theBoard1);
+    for (let i = 0; i < winningBoard.length; i++) {
+      if ( winningBoard[i] === theBoard1) {
+        return true;
+      }
+    }
+
+    let theBoard2 = theBoard;
+    theBoard2.pop();
+    console.log("test3", theBoard2);
+    for (let i = 0; i < winningBoard.length; i++) {
+      if ( winningBoard[i] === theBoard2) {
+        return true;
+      }
+    }
+  }
+
+
+  for (let i = 0; i < winningBoard.length; i++) {
+    if ( winningBoard[i] === test1) {
       return true;
     }
   }
@@ -102,7 +123,6 @@ function displayScreen(outcome, outcomeScreen) {
 
   document.body.appendChild(screenOnGame);
 
-// Removes the classes on the boxes
   screenGameButton.addEventListener("click", function() {
     for (let i = 0; i < boxes.length; i++) {
       boxes[i].classList.remove("box-filled-1");
@@ -114,9 +134,9 @@ function displayScreen(outcome, outcomeScreen) {
     player1.classList.add("active");
     screenOnGame.remove();
 
-  // Resets the movcount and the board
     moveCount = 0;
-    theBoard = [];
+    theXBoard = [];
+    theOBoard = [];
   });
 
 }
@@ -138,11 +158,10 @@ function initializeBoxes(box) {
   // });
 
 
-  box.addEventListener("click", function() {
+  box.addEventListener("click", function(event) {
 
-    let selectedBoxNum = Array.prototype.indexOf.call(boxes, this);
-    theBoard[selectedBoxNum] = currentPlayer;
-    console.log(theBoard);
+// Possible logic to solve the problems of not being able to click on a current box that's selected
+    // if (currentPlayer === "O" && (!box.classList.contains("box-filled-1") || !box.classList.contains("box-filled-2")) {
 
     if (currentPlayer === "O") {
       box.classList.add("box-filled-1");
@@ -151,6 +170,7 @@ function initializeBoxes(box) {
       box.classList.remove("box-filled-1-5-1");
       player2.classList.add("active");
       moveCount += 1;
+      theOBoard.push(event.target.id);
     } else if (currentPlayer === "X") {
       box.classList.add("box-filled-2");
       currentPlayer = "O";
@@ -158,21 +178,21 @@ function initializeBoxes(box) {
       player2.classList.remove("active");
       player1.classList.add("active");
       moveCount += 1;
+      theXBoard.push(event.target.id);
     }
 
-    let condition1 = (win(theBoard, xWins));
-    let condition2 = (win(theBoard, oWins));
+    console.log("theOBoard" ,theOBoard);
+    console.log("theXBoard", theXBoard);
+    let condition1 = (win(theXBoard, winningBoard));
+    let condition2 = (win(theOBoard, winningBoard));
     let condition3 = (moveCount === 9);
 
     if (condition1) {
-      console.log(lose);
       displayScreen(lose, loserScreen);
     } else if (condition2) {
-      console.log(winner);
       displayScreen(winner, winnerScreen);
     } else {
       if ((!condition1) && (!condition2) && condition3) {
-        console.log(draw);
         displayScreen(draw, drawScreen);
       }
     }
