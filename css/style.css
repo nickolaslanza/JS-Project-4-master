@@ -73,17 +73,22 @@ h1 {
     background: #54D17A; }
   .screen-win-one {
     background: #FFA000; }
+  .screen-win-one p,
+  .screen-win-tie p,
+  .screen-win-two p {
+    font-size: 50px;
+  }
     .screen-win-one .button {
       color: #3688C3; }
     .screen-win-one p:before {
-      content: "o";
+      content: "o: ";
       top: 1.75rem; }
   .screen-win-two {
     background: #3688C3; }
     .screen-win-two .button {
       color: #FFA000; }
     .screen-win-two p:before {
-      content: "×";
+      content: "×: ";
       top: 4.5rem; }
 
 .board {

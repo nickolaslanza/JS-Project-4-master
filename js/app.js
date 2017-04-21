@@ -2,6 +2,7 @@
 
 (function IIFE(){
 
+  //variables to create the home beginning screen;
   const player1 = document.getElementById("player1");
   const player2 = document.getElementById("player2");
   const boxes = document.querySelector(".boxes").children;
@@ -10,8 +11,6 @@
   const player1name = document.querySelector(".name1");
   const player2name = document.querySelector(".name2");
   const body = document.querySelector("body");
-
-//variables to create a screen;
   let screenOnLoad = document.createElement("div");
   let screenHeader = document.createElement("header");
   let screenH1 = document.createElement("h1");
@@ -19,6 +18,34 @@
   let screenPlayer1Label = document.createElement("label");
   let screenPlayer2Label = document.createElement("label");
   let br = document.createElement("br");
+
+// Variables for Boxes
+  let box1 = document.getElementById("1a");
+  let box2 = document.getElementById("1b");
+  let box3 = document.getElementById("1c");
+  let box4 = document.getElementById("2a");
+  let box5 = document.getElementById("2b");
+  let box6 = document.getElementById("2c");
+  let box7 = document.getElementById("3a");
+  let box8 = document.getElementById("3b");
+  let box9 = document.getElementById("3c");
+
+// Variables to create a screen
+  let screenOnGame = document.createElement("div");
+  let screenGameHeader = document.createElement("header");
+  let screenGameh1 = document.createElement("h1");
+  let screenGameButton = document.createElement("button");
+  let screenP = document.createElement("p");
+  const winner = "Winner!";
+  const lose = "Loser!";
+  const draw = "Draw";
+  const winnerScreen = "screen screen-win-one";
+  const loserScreen = "screen screen-win-two";
+  const drawScreen = "screen screen-win-tie";
+
+// Variables for the game
+  let currentPlayer = "O";
+  let moveCount = 0;
 
 function gameStart() {
   screenOnLoad.setAttribute("class", "screen screen-start");
@@ -41,67 +68,10 @@ function gameStart() {
     this.remove();
     player1.classList.add("active");
     body.removeChild(screenOnLoad);
+
   });
 
 }
-
-// const winningBoard = [
-//   "012", "021", "120", "102", "201", "210",
-//   "345", "354", "435", "453", "535", "534",
-//   "678", "687", "768", "786", "867", "876",
-//   "036", "063", "306", "360", "603", "630",
-//   "147", "174", "417", "471", "714", "741",
-//   "258", "285", "528", "582", "825", "852",
-//   "048", "084", "408", "480", "804", "840",
-//   "246", "264", "426", "462", "624", "642"
-// ];
-
-// const winningBoard = [
-//   ['1a','1b','1c'],
-//   ['2a','2b','2c'],
-//   ['3a','3b','3c'],
-//   ['1a','2a','3a'],
-//   ['1b','2b','3b'],
-//   ['1c','2c','3c'],
-//   ['1a','2b','3c'],
-//   ['3a','2b','1c']
-// ];
-// const wincondition1 = ['1a','1b','1c'];
-// const wincondition2 = ['2a','2b','2c'];
-// const wincondition3 = ['3a','3b','3c'];
-// const wincondition4 = ['1a','2a','3a'];
-// const wincondition5 = ['1b','2b','3b'];
-// const wincondition6 = ['1c','2c','3c'];
-// const wincondition7 = ['1a','2b','3c'];
-// const wincondition8 = ['3a','2b','1c'];
-
-let allboxes = document.querySelectorAll(".box");
-console.log(allboxes);
-let box1 = document.getElementById("1a");
-let box2 = document.getElementById("1b");
-let box3 = document.getElementById("1c");
-let box4 = document.getElementById("2a");
-let box5 = document.getElementById("2b");
-let box6 = document.getElementById("2c");
-let box7 = document.getElementById("3a");
-let box8 = document.getElementById("3b");
-let box9 = document.getElementById("3c");
-
-const winner = "Winner!";
-const lose = "Loser!";
-const draw = "Draw";
-const winnerScreen = "screen screen-win-one";
-const loserScreen = "screen screen-win-two";
-const drawScreen = "screen screen-win-tie";
-
-let screenOnGame = document.createElement("div");
-let screenGameHeader = document.createElement("header");
-let screenGameh1 = document.createElement("h1");
-let screenGameButton = document.createElement("button");
-let screenP = document.createElement("p");
-
-let currentPlayer = "O";
-let moveCount = 0;
 
 // Core logic of how to win on the gameboard;
 function win() {
@@ -169,19 +139,48 @@ function win() {
 
 
 // Displays the screen based on who wins the game
-function displayScreen(outcome, outcomeScreen) {
+function displayScreen() {
 
-  screenOnGame.setAttribute("class", outcomeScreen);
-  screenGameButton.setAttribute("class", "button");
-  screenGameh1.textContent = "Tic Tac Toe";
-  screenGameButton.textContent = "New Game";
-  screenP.textContent = outcome;
-  screenOnGame.appendChild(screenGameHeader);
-  screenGameHeader.appendChild(screenGameh1);
-  screenGameHeader.appendChild(screenP);
-  screenGameHeader.appendChild(screenGameButton);
-
-  document.body.appendChild(screenOnGame);
+  // Draw
+  if (moveCount === 9) {
+    screenOnGame.setAttribute("class", drawScreen);
+    screenOnGame.setAttribute("id", "finish");
+    screenGameButton.setAttribute("class", "button");
+    screenGameh1.textContent = "Tic Tac Toe";
+    screenGameButton.textContent = "New Game";
+    screenP.textContent = draw;
+    screenOnGame.appendChild(screenGameHeader);
+    screenGameHeader.appendChild(screenGameh1);
+    screenGameHeader.appendChild(screenP);
+    screenGameHeader.appendChild(screenGameButton);
+    document.body.appendChild(screenOnGame);
+    // If you lose screen
+  } else if (currentPlayer === "X") {
+    screenOnGame.setAttribute("class", loserScreen);
+    screenOnGame.setAttribute("id", "finish");
+    screenGameButton.setAttribute("class", "button");
+    screenGameh1.textContent = "Tic Tac Toe";
+    screenGameButton.textContent = "New Game";
+    screenP.textContent = lose;
+    screenOnGame.appendChild(screenGameHeader);
+    screenGameHeader.appendChild(screenGameh1);
+    screenGameHeader.appendChild(screenP);
+    screenGameHeader.appendChild(screenGameButton);
+    document.body.appendChild(screenOnGame);
+    // If you win screen
+  } else if (currentPlayer === "O") {
+    screenOnGame.setAttribute("class", winnerScreen);
+    screenOnGame.setAttribute("id", "finish");
+    screenGameButton.setAttribute("class", "button");
+    screenGameh1.textContent = "Tic Tac Toe";
+    screenGameButton.textContent = "New Game";
+    screenP.textContent = winner;
+    screenOnGame.appendChild(screenGameHeader);
+    screenGameHeader.appendChild(screenGameh1);
+    screenGameHeader.appendChild(screenP);
+    screenGameHeader.appendChild(screenGameButton);
+    document.body.appendChild(screenOnGame);
+  }
 
   screenGameButton.addEventListener("click", function() {
     for (let i = 0; i < boxes.length; i++) {
@@ -190,12 +189,11 @@ function displayScreen(outcome, outcomeScreen) {
       boxes[i].classList.add("box");
       boxes[i].textContent = "";
     }
-
     player2.classList.remove("active");
     player1.classList.add("active");
     screenOnGame.remove();
-
     moveCount = 0;
+    currentPlayer = "O";
   });
 
 }
@@ -205,14 +203,16 @@ function initializeBoxes(box) {
   box.addEventListener("click", function(event) {
     if (currentPlayer === "O") {
       box.classList.add("box-filled-1");
-      box.textContent = "o";
+      box.innerHTML = "o";
+      box.style.color = "orange";
       player1.classList.remove("active");
       box.classList.remove("box-filled-1-5-1");
       player2.classList.add("active");
       moveCount += 1;
     } else if (currentPlayer === "X") {
       box.classList.add("box-filled-2");
-      box.textContent = "x";
+      box.innerHTML = "x";
+      box.style.color = "white";
       box.classList.remove("box-filled-1-5-1");
       player2.classList.remove("active");
       player1.classList.add("active");
@@ -220,14 +220,9 @@ function initializeBoxes(box) {
     }
 
     let condition1 = (win());
-    let condition3 = (moveCount === 9);
 
     if (condition1) {
-      displayScreen(lose, loserScreen);
-    } else {
-      if ((!condition1) && condition3) {
-        displayScreen(draw, drawScreen);
-      }
+      displayScreen();
     }
 
     // Changing Players after we check for win conditions
@@ -239,7 +234,6 @@ function initializeBoxes(box) {
   });
 }
 
-
 gameStart();
 
 for (let i = 0; i < boxes.length; i++) {
@@ -249,19 +243,32 @@ for (let i = 0; i < boxes.length; i++) {
 }());
 
 
+// Trying to figure out event listener functionality
 
-
-
-  // // Mouseover turning O's grey
-  // box.addEventListener("mouseover", function() {
-  //   if (!box.classList.contains("box-filled-1-9") || !box.classList.contains("box-filled-2-9")) {
-  //     box.classList.add("box-filled-1-5-1");
-  //   }
-  // });
-  //
-  // // mouseout removing gray class X's
-  // box.addEventListener("mouseout", function() {
-  //   if (!box.classList.contains("box-filled-1-9") || !box.classList.contains("box-filled-2-9")) {
-  //     box.classList.remove("box-filled-1-5-1");
-  //   }
-  // });
+// function addEventListenerByClass(className, event, fn) {
+//     var list = document.getElementsByClassName(className);
+//     for (var i = 0; i < list.length; i++) {
+//         list[i].addEventListener(event, fn, false);
+//     }
+// }
+//
+// function listen() {
+//   if (!list[i].classList.contains("box-filled-1-9") || !box.classList.contains("box-filled-2-9")) {
+//     box.classList.add("box-filled-1-5-1");
+//   }
+// }
+//
+// addEventListenerByClass('box', 'mouseover', listen);
+//
+//
+// // daboxes.addEventListener("mouseover", function() {
+// //   if (!box.classList.contains("box-filled-1-9") || !box.classList.contains("box-filled-2-9")) {
+// //     box.classList.add("box-filled-1-5-1");
+// //   }
+// // });
+// //
+// // daboxes.addEventListener("mouseout", function() {
+// //   if (!box.classList.contains("box-filled-1-9") || !box.classList.contains("box-filled-2-9")) {
+// //     box.classList.remove("box-filled-1-5-1");
+// //   }
+// // });
