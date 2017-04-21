@@ -75,6 +75,8 @@ function gameStart() {
 // const wincondition7 = ['1a','2b','3c'];
 // const wincondition8 = ['3a','2b','1c'];
 
+let allboxes = document.querySelectorAll(".box");
+console.log(allboxes);
 let box1 = document.getElementById("1a");
 let box2 = document.getElementById("1b");
 let box3 = document.getElementById("1c");
@@ -105,8 +107,58 @@ let moveCount = 0;
 function win() {
 
   if (box1.textContent !== "") {
+    // top across
     if (box1.textContent === box2.textContent) {
       if (box1.textContent === box3.textContent) {
+        return true;
+      }
+    }
+    // top down
+    if (box1.textContent === box4.textContent) {
+      if (box1.textContent === box7.textContent) {
+        return true;
+      }
+    }
+    //top diagnal right down
+    if (box1.textContent === box5.textContent) {
+      if (box1.textContent === box9.textContent) {
+        return true;
+      }
+    }
+  }
+
+  if (box7.textContent != "") {
+    // bottom left, across
+    if (box7.textContent === box8.textContent) {
+      if (box7.textContent === box9.textContent) {
+        return true;
+      }
+    }
+    // bottom left, topright diagnal
+    if (box7.textContent === box5.textContent) {
+      if (box7.textContent === box3.textContent) {
+        return true;
+      }
+    }
+  }
+
+  if (box6.textContent != "") {
+    if (box6.textContent === box9.textContent) {
+      if (box6.textContent === box3.textContent) {
+        return true;
+      }
+    }
+    if (box6.textContent === box5.textContent) {
+      if (box6.textContent === box4.textContent) {
+        return true;
+      }
+    }
+  }
+
+  if (box5.textContent != "") {
+    // bottom left, across
+    if (box5.textContent === box2.textContent) {
+      if (box5.textContent === box8.textContent) {
         return true;
       }
     }
