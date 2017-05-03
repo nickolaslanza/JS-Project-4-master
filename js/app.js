@@ -68,7 +68,10 @@ function gameStart() {
     this.remove();
     player1.classList.add("active");
     body.removeChild(screenOnLoad);
-
+    player1.innerHTML = screenPlayer1Input.value;
+    player2.innerHTML = screenPlayer2Input.value;
+    player1.style.color = "white";
+    player2.style.color = "white";
   });
 
 }
