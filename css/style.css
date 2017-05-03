@@ -146,18 +146,15 @@ h1 {
       background-color: #FFA000;
       background-image: url(../img/o.svg); }
     .boxes .box-filled-1-5 {
-      background-color: black;
+      background-color: #FFA000;
       background-image: url(../img/o.svg);
-      opacity: .25;
     }
     .boxes .box-filled-2 {
       background-color: #3688C3;
       background-image: url(../img/x.svg); }
     .boxes .box-filled-2-5 {
-      background-color: black;
-      background-image: url(../img/x.svg);
-      opacity: .25;
-    }
+      background-color: #3688C3;
+      background-image: url(../img/x.svg); }
     .boxes .box-filled-1-5-1 {
       background-color: black;
       opacity: .25;

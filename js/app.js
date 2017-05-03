@@ -36,8 +36,8 @@
   let screenGameh1 = document.createElement("h1");
   let screenGameButton = document.createElement("button");
   let screenP = document.createElement("p");
-  const winner = "Winner!";
-  const lose = "Loser!";
+  const winner = "O Wins!";
+  const lose = "X Wins!";
   const draw = "Draw";
   const winnerScreen = "screen screen-win-one";
   const loserScreen = "screen screen-win-two";
@@ -142,20 +142,7 @@ function win() {
 function displayScreen() {
 
   // Draw
-  if (moveCount === 9) {
-    screenOnGame.setAttribute("class", drawScreen);
-    screenOnGame.setAttribute("id", "finish");
-    screenGameButton.setAttribute("class", "button");
-    screenGameh1.textContent = "Tic Tac Toe";
-    screenGameButton.textContent = "New Game";
-    screenP.textContent = draw;
-    screenOnGame.appendChild(screenGameHeader);
-    screenGameHeader.appendChild(screenGameh1);
-    screenGameHeader.appendChild(screenP);
-    screenGameHeader.appendChild(screenGameButton);
-    document.body.appendChild(screenOnGame);
-    // If you lose screen
-  } else if (currentPlayer === "X") {
+ if (currentPlayer === "X") {
     screenOnGame.setAttribute("class", loserScreen);
     screenOnGame.setAttribute("id", "finish");
     screenGameButton.setAttribute("class", "button");
@@ -180,11 +167,26 @@ function displayScreen() {
     screenGameHeader.appendChild(screenP);
     screenGameHeader.appendChild(screenGameButton);
     document.body.appendChild(screenOnGame);
-  }
+  } else if (moveCount === 9) {
+      screenOnGame.setAttribute("class", drawScreen);
+      screenOnGame.setAttribute("id", "finish");
+      screenGameButton.setAttribute("class", "button");
+      screenGameh1.textContent = "Tic Tac Toe";
+      screenGameButton.textContent = "New Game";
+      screenP.textContent = draw;
+      screenOnGame.appendChild(screenGameHeader);
+      screenGameHeader.appendChild(screenGameh1);
+      screenGameHeader.appendChild(screenP);
+      screenGameHeader.appendChild(screenGameButton);
+      document.body.appendChild(screenOnGame);
+      // If you lose screen
+    }
 
   screenGameButton.addEventListener("click", function() {
     for (let i = 0; i < boxes.length; i++) {
+      boxes[i].classList.remove("box-filled-1-5");
       boxes[i].classList.remove("box-filled-1");
+      boxes[i].classList.remove("box-filled-2-5");
       boxes[i].classList.remove("box-filled-2");
       boxes[i].classList.add("box");
       boxes[i].textContent = "";
@@ -200,37 +202,61 @@ function displayScreen() {
 
 function initializeBoxes(box) {
 
+  box.addEventListener("mouseover", function(event) {
+    if (box.classList.contains("box-filled-1-5") || box.classList.contains("box-filled-2-5")) {
+      event.preventDefault();
+    } else {
+      if (currentPlayer === "O") {
+        box.classList.add("box-filled-1");
+      } else if (currentPlayer === "X") {
+        box.classList.add("box-filled-2");
+      }
+    }
+  });
+
+  box.addEventListener("mouseout", function(event) {
+    if (currentPlayer === "O" && box.classList.contains("box-filled-1")) {
+      box.classList.remove("box-filled-1");
+    } else if (currentPlayer === "X" && box.classList.contains("box-filled-2")) {
+      box.classList.remove("box-filled-2");
+    }
+  });
+
   box.addEventListener("click", function(event) {
-    if (currentPlayer === "O") {
-      box.classList.add("box-filled-1");
-      box.innerHTML = "o";
-      box.style.color = "orange";
-      player1.classList.remove("active");
-      box.classList.remove("box-filled-1-5-1");
-      player2.classList.add("active");
-      moveCount += 1;
-    } else if (currentPlayer === "X") {
-      box.classList.add("box-filled-2");
-      box.innerHTML = "x";
-      box.style.color = "white";
-      box.classList.remove("box-filled-1-5-1");
-      player2.classList.remove("active");
-      player1.classList.add("active");
-      moveCount += 1;
+    if (box.classList.contains("box-filled-1-5") || box.classList.contains("box-filled-2-5")) {
+      event.preventDefault();
+    } else {
+      if (currentPlayer === "O") {
+        box.classList.add("box-filled-1-5");
+        box.innerHTML = "o";
+        box.style.color = "orange";
+        player1.classList.remove("active");
+        player2.classList.add("active");
+        moveCount += 1;
+      } else if (currentPlayer === "X") {
+        box.classList.add("box-filled-2-5");
+        box.innerHTML = "x";
+        box.style.color = "white";
+        player2.classList.remove("active");
+        player1.classList.add("active");
+        moveCount += 1;
+      }
+
+      let condition1 = (win());
+
+      if (condition1) {
+        displayScreen();
+      }
+
+      // Changing Players after we check for win conditions
+      if (currentPlayer === "O") {
+        currentPlayer = "X";
+      } else if (currentPlayer === "X") {
+        currentPlayer = "O";
+      }
     }
 
-    let condition1 = (win());
 
-    if (condition1) {
-      displayScreen();
-    }
-
-    // Changing Players after we check for win conditions
-    if (currentPlayer === "O") {
-      currentPlayer = "X";
-    } else if (currentPlayer === "X") {
-      currentPlayer = "O";
-    }
   });
 }
 
