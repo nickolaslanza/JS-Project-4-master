@@ -145,7 +145,7 @@ function win() {
 function displayScreen() {
 
   // Draw
- if (currentPlayer === "X") {
+ if (currentPlayer === "X" && moveCount !== 9) {
     screenOnGame.setAttribute("class", loserScreen);
     screenOnGame.setAttribute("id", "finish");
     screenGameButton.setAttribute("class", "button");
@@ -158,7 +158,7 @@ function displayScreen() {
     screenGameHeader.appendChild(screenGameButton);
     document.body.appendChild(screenOnGame);
     // If you win screen
-  } else if (currentPlayer === "O") {
+  } else if (currentPlayer === "O" && moveCount !== 9) {
     screenOnGame.setAttribute("class", winnerScreen);
     screenOnGame.setAttribute("id", "finish");
     screenGameButton.setAttribute("class", "button");
@@ -248,6 +248,8 @@ function initializeBoxes(box) {
       let condition1 = (win());
 
       if (condition1) {
+        displayScreen();
+      } else if (moveCount === 9) {
         displayScreen();
       }
 
